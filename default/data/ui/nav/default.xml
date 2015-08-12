@@ -1,0 +1,7 @@
+<nav color="#65A637">
+  <collection label="SurfWatch Labs Add-on">
+    <view name="cyberfacts" default="true" />
+    <a href="flashtimeline?q=index%3Dswl_cyberfacts">Search for CyberFacts</a>
+    <a href="https://www.surfwatchlabs.com/tech-docs" target="_blank">SurfWatch Labs API docs</a>
+  </collection>
+</nav>
