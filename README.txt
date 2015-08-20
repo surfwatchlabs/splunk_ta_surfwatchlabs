@@ -1,7 +1,7 @@
 *****************************************
 *
 * App: Splunk Add-on for SurfWatch Labs API
-* Current Version: 1.0
+* Current Version: 1.0.1
 * Last Modified: Aug 2015
 * Splunk Version: 6.x
 * Author: SurfWatch Labs
