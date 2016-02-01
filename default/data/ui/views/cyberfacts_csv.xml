@@ -1,9 +1,10 @@
 <form>
-  <label>CyberFacts Visualization Examples</label>
+  <label>CyberFacts Visualization Examples (CSV data)</label>
   <fieldset autoRun="true" submitButton="false">
     <input type="dropdown" token="industry_id_tok">
       <label>Select an Industry to visualize</label>
-      <default>-10</default>
+      <default>*</default>
+      <choice value="*">All</choice>
       <choice value="-10">Consumer Goods</choice>
       <choice value="-6">Energy</choice>
       <choice value="-1">Entertainment</choice>
@@ -17,13 +18,19 @@
       <choice value="-13">Telecommunications</choice>
       <choice value="-9">Utilities</choice>
     </input>
+    <input type="dropdown" token="index_tok">
+      <label>Select an index</label>
+      <default>swl_sample_cyberfacts</default>
+      <choice value="swl_sample_cyberfacts">swl_sample_cyberfacts</choice>
+      <choice value="swl_cyberfacts">swl_cyberfacts</choice>
+    </input>
   </fieldset>
   <row>
     <panel>
       <title>Top Effects over last 7 days</title>
       <chart>
         <search>
-          <query>index=swl_cyberfacts "industry_targets{}.industry_id"=$industry_id_tok$ "data_feed_ids{}"!=-101 | spath | rename "tags{}.macro_tag" as mt | rename "tags{}.tag_super_type_id" as stid | eval ct=mvzip(mt,stid) | mvexpand ct | eval ct = split(ct,",") | eval mt=mvindex(ct,0) | eval stid=mvindex(ct,1) | where stid=5 and ct != "Threat Intelligence" | table _time, ct, mt, stid | top limit=20 mt</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_csv cyberfact_polarity=-1 | transaction cyberfact_id mvlist=true | search tag_super_type_id=5 industry_id=$industry_id_tok$ | top limit=1000 macro_tag | where macro_tag != "NULL"</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -54,7 +61,7 @@
       <title>Most impacted Industry Groups over last 7 days</title>
       <chart>
         <search>
-          <query>index=swl_cyberfacts "industry_targets{}.industry_id"=$industry_id_tok$ "data_feed_ids{}"!=-101 | top limit=10 industry_targets{}.industry_group_description</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_csv industry_id=$industry_id_tok$ | top limit=10 industry_group_description</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -68,7 +75,7 @@
       <title>Top Practice categories over last 7 days</title>
       <chart>
         <search>
-          <query>index=swl_cyberfacts "industry_targets{}.industry_id"=$industry_id_tok$ "data_feed_ids{}"!=-101 | spath | rename "tags{}.macro_tag" as mt | rename "tags{}.tag_super_type_id" as stid | eval ct=mvzip(mt,stid) | mvexpand ct | eval ct = split(ct,",") | eval mt=mvindex(ct,0) | eval stid=mvindex(ct,1) | where stid=3 | table _time, ct, mt, stid | top limit=20 mt</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_csv cyberfact_polarity=-1 | transaction cyberfact_id mvlist=true | search tag_super_type_id=3 industry_id=$industry_id_tok$ | top limit=1000 macro_tag | where macro_tag != "NULL"</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -99,7 +106,7 @@
       <title>Organizations most effected by data breaches over the last 7 days</title>
       <chart>
         <search>
-          <query>index=swl_cyberfacts "industry_targets{}.industry_id"=$industry_id_tok$ "data_feed_ids{}"!=-101 cyberfact_type_id=8 | top limit=20 "industry_targets{}.industry_target_description"</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_csv industry_id=$industry_id_tok$ cyberfact_type_id=8 | top limit=20 industry_target_description</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>

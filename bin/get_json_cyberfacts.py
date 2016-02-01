@@ -15,7 +15,7 @@ app_key = config.get('swl_account', 'app_key')
 yesterday_datetime = datetime.datetime.utcnow() - datetime.timedelta(days=1)
 
 url = 'https://www.surfwatchlabs.com/api/v3/cyberFacts'
-headers = {'app_id': app_id, 'app_key': app_key, 'accept': 'application/json'}
+headers = {'app-id': app_id, 'app-key': app_key, 'accept': 'application/json'}
 payload = {'startDate': yesterday_datetime.date(), 'endDate': yesterday_datetime.date()}
 
 r = requests.get(url, headers=headers, params=payload)
