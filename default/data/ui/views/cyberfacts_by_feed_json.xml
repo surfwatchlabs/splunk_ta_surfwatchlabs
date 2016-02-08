@@ -1,10 +1,9 @@
 <form>
-  <label>CyberFacts Visualization Examples (CSV data)</label>
+  <label>CyberFacts by Feed Examples (JSON data)</label>
   <fieldset autoRun="true" submitButton="false">
-    <input type="dropdown" token="industry_id_tok">
-      <label>Select an Industry to visualize</label>
-      <default>*</default>
-      <choice value="*">All</choice>
+    <input type="dropdown" token="feed_id_tok">
+      <label>Select a Feed to visualize</label>
+      <default>-100</default>
       <choice value="-10">Consumer Goods</choice>
       <choice value="-6">Energy</choice>
       <choice value="-1">Entertainment</choice>
@@ -15,7 +14,9 @@
       <choice value="-7">Information Technology</choice>
       <choice value="-8">Materials</choice>
       <choice value="-12">Other Organizations</choice>
+      <choice value="-101">Surfwatch Dark Web</choice>
       <choice value="-13">Telecommunications</choice>
+      <choice value="-100">Universal Data Feed</choice>
       <choice value="-9">Utilities</choice>
     </input>
     <input type="dropdown" token="index_tok">
@@ -30,7 +31,7 @@
       <title>Top Effects over last 7 days</title>
       <chart>
         <search>
-          <query>index=$index_tok$ sourcetype=*cyberfact_csv cyberfact_polarity=-1 | transaction cyberfact_id mvlist=true | search tag_super_type_id=5 industry_id=$industry_id_tok$ | top limit=1000 macro_tag | where macro_tag != "NULL"</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_json cyberfact_polarity=-1 "tags{}.tag_super_type_id"=5 "data_feed_ids{}"=$feed_id_tok$ | spath | rename "tags{}.macro_tag" as macro_tag | rename "tags{}.tag_super_type_id" as tag_super_type_id | eval x=mvzip(macro_tag,tag_super_type_id) | mvexpand x | eval x = split(x,",") | eval macro_tag=mvindex(x,0) | eval tag_super_type_id=mvindex(x,1) | search tag_super_type_id=5 | stats c(macro_tag) as count by macro_tag | fieldformat count=count/2</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -61,7 +62,7 @@
       <title>Most impacted Industry Groups over last 7 days</title>
       <chart>
         <search>
-          <query>index=$index_tok$ sourcetype=*cyberfact_csv industry_id=$industry_id_tok$ | top limit=10 industry_group_description</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_json "data_feed_ids{}"=$feed_id_tok$ | top limit=10 industry_targets{}.industry_group_description</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -75,7 +76,7 @@
       <title>Top Practice categories over last 7 days</title>
       <chart>
         <search>
-          <query>index=$index_tok$ sourcetype=*cyberfact_csv cyberfact_polarity=-1 | transaction cyberfact_id mvlist=true | search tag_super_type_id=3 industry_id=$industry_id_tok$ | top limit=1000 macro_tag | where macro_tag != "NULL"</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_json cyberfact_polarity=-1 "tags{}.tag_super_type_id"=3 "data_feed_ids{}"=$feed_id_tok$ | spath | rename "tags{}.macro_tag" as macro_tag | rename "tags{}.tag_super_type_id" as tag_super_type_id | eval x=mvzip(macro_tag,tag_super_type_id) | mvexpand x | eval x = split(x,",") | eval macro_tag=mvindex(x,0) | eval tag_super_type_id=mvindex(x,1) | search tag_super_type_id=3 | stats c(macro_tag) as count by macro_tag | fieldformat count=count/2</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>
@@ -106,7 +107,7 @@
       <title>Organizations most effected by data breaches over the last 7 days</title>
       <chart>
         <search>
-          <query>index=$index_tok$ sourcetype=*cyberfact_csv industry_id=$industry_id_tok$ cyberfact_type_id=8 | top limit=20 industry_target_description</query>
+          <query>index=$index_tok$ sourcetype=*cyberfact_json "data_feed_ids{}"=$feed_id_tok$ cyberfact_type_id=8 | top limit=20 "industry_targets{}.industry_target_description"</query>
           <earliest>-7d@d</earliest>
           <latest>now</latest>
         </search>

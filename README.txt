@@ -18,7 +18,7 @@ There are two ways to work with the Splunk Add-on for SurfWatch Labs API - eithe
 
 
 ## Loading Sample Datasets
-If you've just installed the add-on you will see a simple application configuration page.  The page asks for you SurfWatch Labs App ID and App Key.  If you do not have these at this time, you can just click *save* to skip this step for now (you can always add the values back in either by editing local/sw_api.conf or navigating to <SPLUNK_URL>/manager/splunk_ta_surfwatchlabs/apps/local/splunk_ta_surfwatchlabs/setup?action=edit).
+If you've just installed the add-on you will see a simple application configuration page.  The page asks for you SurfWatch Labs App ID and App Key.  If you do not have these at this time, you can just click *save* to skip this step for now (you can always add the values back in either by editing local/sw_api.conf or navigating to $SPLUNK_URL/manager/splunk_ta_surfwatchlabs/apps/local/splunk_ta_surfwatchlabs/setup?action=edit).
 
 Once you are past the application configuration page, go to *Settings > Data Inputs > Files & directories* and enable one or both of the following:
 * $SPLUNK_HOME/etc/apps/splunk_ta_surfwatchlabs/sample_data/cyberfacts.csv
@@ -50,8 +50,7 @@ By default the same data scripts will populate an index called *swl_sample_cyber
 
 
 ## Visualizing CyberFacts
-Two sample dashboards are provided to show various ways to visualize CyberFact data.  The data is filtered by Industry so make sure to select different industries to explore the data.  By default the Industry is not filtered.
-
+Two sample dashboards are provided to show various ways to visualize CyberFact data.  There are dashboards to show filtering the data by data feed and by Industry, as well as other ways to use the data.
 
 ## Upgrading from Splunk Add-on for SurfWatch Labs API 1.x to 2.x
 The Splunk Add-on for SurfWatch Labs API 2.x uses the same index name (swl_cyberfacts) as 1.x, however in 2.x we renamed the sourcetype *cyberfact* to *cyberfact_json*, and introduced a new sourcetype *cyberfact_csv*.  The example dashboard was also renamed from *cyberfacts* to *cyberfacts_json*, and a new companion *cyberfacts_csv* was added. The input scripts were renamed, once again creating a '_json' and '_csv' pair where before only one  (that dealt with JSON) existed.  And lastly, we've added sample data and added an index *swl_sample_cyberfacts* and two sourcetypes, *sample_cyberfact_csv* and *sample_cyberfact_json* to differentiate this data from potentially production-use data.
@@ -69,8 +68,14 @@ Note that the primary intention of this add-on is to highlight how to get data f
 
 
 # Release Notes
+**v2.1.0: Feb 2016**
+  - Added _by_feed CyberFact dashboards, renamed others to _by_industry
+  - Added misc CyberFact dashboard
+  - Added a little more sample data
+  - Fixed some searches
+
 **v2.0.0: Jan 2016**
-  - Added calls to get CSV data (much easier to use in Splunk), renamed existing to 'JSON'
+    - Added calls to get CSV data (much easier to use in Splunk), renamed existing to 'JSON'
   - Added sample datasets for minor exploration w/out having an API license
 
 **v1.0.1: Aug 2015**
